@@ -1,0 +1,125 @@
+/* AdminKP.css */
+
+.admin-kp-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: #333;
+  animation: fadeIn 0.7s ease-in-out;
+}
+
+.admin-kp-container h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.add-room-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.add-room-form input {
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  min-width: 200px;
+  transition: 0.3s ease;
+  font-size: 16px;
+}
+
+.add-room-form input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.add-room-form button {
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.add-room-form button:hover {
+  background: linear-gradient(135deg, #5a0dc4 0%, #1a63f5 100%);
+  transform: scale(1.03);
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.kp-room-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.kp-room-list li {
+  background: #fff;
+  margin: 10px auto;
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.kp-room-list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.kp-room-list button {
+  background: #e74c3c;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.kp-room-list button:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+/* Subheading */
+.admin-kp-container h4 {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #444;
+}
+
+/* Error text */
+.admin-kp-container p {
+  color: red;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* Fade in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

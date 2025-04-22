@@ -1,0 +1,192 @@
+//backend/routes/reservations.js
+const express = require("express");
+const { ObjectId } = require("mongodb");
+const router = express.Router();
+
+module.exports = (db) => {
+  const reservations = db.collection("reservations");
+  const resources = db.collection("resources");
+  router.get("/:resourceId", async (req, res) => {
+    const { resourceId } = req.params;
+    try {
+      const resource = await resources.findOne({ _id: new ObjectId(resourceId) });
+      if (!resource) return res.status(404).json({ message: "Resource not found" });
+      res.json(resource);
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
+  
+  // 🟢 Book a room
+  router.post("/book", async (req, res) => {
+    const { resourceId, userEmail, userName, date, startTime, endTime, purpose } = req.body;
+
+    try {
+      // 1. Validate resource
+      const resource = await resources.findOne({ _id: resourceId });
+
+      if (!resource) {
+        return res.status(404).json({ message: "Resource not found" });
+      }
+
+      // 2. Check for conflicting bookings
+      const conflict = await reservations.findOne({
+        resourceId,
+        date,
+        $or: [
+          {
+            startTime: { $lt: endTime },
+            endTime: { $gt: startTime },
+          },
+        ],
+      });
+
+      if (conflict) {
+        return res.status(400).json({ message: "Slot already booked" });
+      }
+
+      // 3. Insert the new reservation
+      const result = await reservations.insertOne({
+        resourceId,
+        location: resource.location,
+        userEmail,
+        userName,
+        date,
+        startTime,
+        endTime,
+        purpose,
+        status: "Booked",
+      });
+
+      res.json({ message: "Room booked successfully!", reservationId: result.insertedId });
+    } catch (error) {
+      console.error("Booking error:", error);
+      res.status(500).json({ message: "Internal server error during booking" });
+    }
+  });
+
+  // ✅ Check available rooms for given date and time
+  router.get("/available", async (req, res) => {
+    const { date, startTime, endTime } = req.query;
+
+    console.log("Checking availability for:", date, startTime, endTime);
+
+    if (!date || !startTime || !endTime) {
+      return res.status(400).json({ message: "Missing date or time range" });
+    }
+
+    try {
+      // 1. Find all reservations that conflict with the input time
+      const conflicts = await reservations
+        .find({
+          date,
+          $or: [
+            {
+              startTime: { $lt: endTime },
+              endTime: { $gt: startTime },
+            },
+          ],
+        })
+        .toArray();
+
+      // 2. Extract reserved resource IDs safely
+      const reservedIds = conflicts
+        .map((r) => {
+          try {
+            return r.resourceId;
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+
+      // 3. Get classrooms not reserved in that time slot
+      const availableRooms = await resources
+        .find({
+          _id: { $nin: reservedIds },
+          type: "Classroom",
+        })
+        .sort({ name: 1 })
+        .toArray();
+
+      res.json(availableRooms);
+    } catch (error) {
+      console.error("Error checking availability:", error);
+      res.status(500).json({ message: "Server error checking availability" });
+    }
+  });
+
+  // ❌ Cancel a reservation
+  router.delete("/cancel/:reservationId", async (req, res) => {
+    const { reservationId } = req.params;
+    const userEmail = req.headers["x-user-email"];
+
+    try {
+      const result = await reservations.deleteOne({
+        _id: new ObjectId(reservationId),
+        userEmail,
+      });
+
+      if (result.deletedCount === 0) {
+        return res.status(403).json({ message: "Not allowed or not found" });
+      }
+
+      res.json({ message: "Reservation cancelled" });
+    } catch (error) {
+      console.error("Cancellation error:", error);
+      res.status(500).json({ message: "Error while cancelling reservation" });
+    }
+  });
+
+  // 📄 Get user’s reservations
+  router.get("/my", async (req, res) => {
+    const userEmail = req.headers["x-user-email"];
+
+    try {
+      const myReservations = await reservations.find({ userEmail }).toArray();
+      res.json(myReservations);
+    } catch (error) {
+      console.error("Fetching user reservations failed:", error);
+      res.status(500).json({ message: "Failed to retrieve reservations" });
+    }
+  });
+
+  // 🧾 Get full resource details by ID
+ /* router.get("/:resourceId", async (req, res) => {
+    const { resourceId } = req.params;
+    try {
+      const resource = await resources.findOne({ _id: new ObjectId(resourceId) });
+      if (!resource) {
+        return res.status(404).json({ message: "Resource not found" });
+      }
+      res.json(resource);
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  });*/
+
+  return router;
+};
+
+
+1.Received GET /api/resources/:id with ID: 67fc791e4c7109a0e8310103 
+Resource found: {
+  _id: new ObjectId('67fc791e4c7109a0e8310103'),
+  name: 'KP-103',
+  type: 'Classroom',
+  location: 'KP',
+  availability: true
+} 
+2.http://localhost:3000/book-room/67fc791e4c7109a0e8310103
+Resource not found
+3.http://localhost:3000/book-room/67fc791e4c7109a0e8310103
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /book-room/67fc791e4c7109a0e8310103</pre>
+</body>
+</html>

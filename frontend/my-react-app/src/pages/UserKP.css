@@ -1,0 +1,133 @@
+/*.user-kp-container {
+  padding: 20px;
+  text-align: center;
+}
+.room-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.room-card {
+  width: 200px;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: lightgreen;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.room-card.booked {
+  background-color: tomato;
+  cursor: not-allowed;
+}*/
+/* UserKP.css */
+.user-kp-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background: url('./kp.jpeg') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.user-kp-overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(127, 124, 124, 0.7); /* translucent white */
+  z-index: 1;
+}
+
+.user-kp-box {
+  position: relative;
+  z-index: 2;
+  background: #ffffffdd;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 400px;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: fadeInPopup 2s forwards;
+}
+
+@keyframes fadeInPopup {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.user-kp-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.filter-form input[type="date"],
+.filter-form input[type="time"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.filter-form button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.filter-form button:hover {
+  background: linear-gradient(135deg, #0056b3, #00a2cc);
+}
+
+.error {
+  margin-top: 10px;
+  color: red;
+  font-size: 14px;
+}
+.room-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.room-card {
+  width: 200px;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: lightgreen;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.room-card.booked {
+  background-color: tomato;
+  cursor: not-allowed;
+}
+.user-kp-container1 {
+  padding: 20px;
+  text-align: center;
+}
