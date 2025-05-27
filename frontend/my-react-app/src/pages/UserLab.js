@@ -1,10 +1,8 @@
-
 // src/pages/UserLab.js
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./UserKP.css"; // Reusing the same CSS
-
+import "../assets/styles/UserKP.css"; 
 const UserLab = () => {
   const [filters, setFilters] = useState({
     date: "",
@@ -17,7 +15,7 @@ const UserLab = () => {
 
   const handleInputChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
-    setError(""); // clear error on new input
+    setError(""); 
   };
 
   const handleSearch = () => {
@@ -64,7 +62,7 @@ const UserLab = () => {
   };
 
   return (
-    <div className="user-kp-container">
+    <div className="user-cse-container">
       <div className="user-kp-overlay"></div>
       <div className="user-kp-box">
         <h2>Check CSE Lab Availability</h2>
@@ -98,5 +96,3 @@ const UserLab = () => {
 };
 
 export default UserLab;
-
-

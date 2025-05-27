@@ -1,9 +1,7 @@
-// src/pages/BookingPage.js
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import './BookingPage.css'; // 👈 Don't forget to import
+import '../assets/styles/BookingPage.css';
 
 const BookingPage = () => {
   const { roomId } = useParams();
@@ -41,6 +39,26 @@ const BookingPage = () => {
 
   const handleBook = async () => {
     try {
+      // Step 1: Check for existing reservation with same purpose
+      const conflictCheck = await axios.get(`http://localhost:5000/api/reservations/check-purpose`, {
+        params: {
+          resourceId: roomId,
+          date: form.date,
+          startTime: form.startTime,
+          endTime: form.endTime,
+          purpose: form.purpose,
+        },
+      });
+
+      if (conflictCheck.data.conflict) {
+        const proceed = window.confirm("A reservation with the same purpose already exists at this time. Do you still want to book?");
+        if (!proceed) {
+          navigate('/user-dashboard') ;
+          return;// Cancel booking
+        }
+      }
+
+      // Step 2: Proceed with booking
       await axios.post(`http://localhost:5000/api/reservations/book`, {
         resourceId: roomId,
         ...form,
@@ -83,5 +101,4 @@ const BookingPage = () => {
 };
 
 export default BookingPage;
-
 

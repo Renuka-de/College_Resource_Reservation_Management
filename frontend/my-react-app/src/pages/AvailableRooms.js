@@ -1,8 +1,7 @@
-// src/pages/AvailableRooms.js
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./UserKP.css";
+import "../assets/styles/UserKP.css";
 
 const AvailableRooms = () => {
   const { state } = useLocation();
@@ -30,7 +29,7 @@ const AvailableRooms = () => {
         setRooms(res.data);
       } catch (err) {
         console.error(err);
-        setError("Failed to fetch available rooms.");
+        setError("Failed to fetch rooms.");
       }
     };
 
@@ -38,28 +37,38 @@ const AvailableRooms = () => {
   }, [state]);
 
   const handleRoomClick = (room) => {
-    navigate(`/book-room/${room._id}`, {
-      state: {
-        date: state.date,
-        startTime: state.startTime,
-        endTime: state.endTime,
-      },
-    });
+    if (room.status === "Available") {
+      navigate(`/book-room/${room._id}`, {
+        state: {
+          date: state.date,
+          startTime: state.startTime,
+          endTime: state.endTime,
+        },
+      });
+    }
   };
 
   return (
     <div className="user-kp-container1">
-      <h2>Available {state?.type}s in {state?.location}</h2>
+      <h2>Rooms in {state?.location} ({state?.type})</h2>
       {error && <p className="error">{error}</p>}
       <div className="room-grid">
         {rooms.map((room) => (
           <div
             key={room._id}
-            className="room-card available"
+            className={`room-card ${room.status.toLowerCase()}`}
             onClick={() => handleRoomClick(room)}
+            style={{ cursor: room.status === "Available" ? "pointer" : "not-allowed" }}
           >
-            <h5>{room.name}</h5>
-            <p>{room.location}</p>
+            <div className="room-name">{room.name}</div>
+            <div className={`room-status ${room.status.toLowerCase()}`}>
+              {room.status}
+            </div>
+            {room.status === "Booked" && (
+              <div className="room-purpose">
+                Purpose: {room.purpose || "Not specified"}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -68,3 +77,4 @@ const AvailableRooms = () => {
 };
 
 export default AvailableRooms;
+

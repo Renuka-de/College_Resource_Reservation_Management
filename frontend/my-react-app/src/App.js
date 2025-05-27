@@ -18,8 +18,8 @@ function App() {
       <Routes>
         
         <Route path="/" element={<Login />} />
-        <Route path="/user-dashboard" element={<UserDashboard />} /> {/* Updated path */}
-        <Route path="/admin-dashboard" element={<AdminDashboard />} /> {/* Updated path */}
+        <Route path="/user-dashboard" element={<UserDashboard />} /> 
+        <Route path="/admin-dashboard" element={<AdminDashboard />} /> 
         <Route path="/user-kp" element={<UserKP />} />
         <Route path="/admin-kp" element={<AdminKP />} />
         <Route path="/book-room/:roomId" element={<BookingPage />} />

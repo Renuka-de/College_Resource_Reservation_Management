@@ -13,6 +13,37 @@
   animation: fadeIn 0.7s ease-in-out;
 }
 
+/* AdminKP.css */
+
+/* Go Back Button Style */
+button[type='button'] {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
+}
+
+button[type='button']:hover {
+  background: linear-gradient(135deg, #5a0dc4 0%, #1a63f5 100%);
+  transform: translateY(-2px); /* Subtle elevation effect */
+}
+
+button[type='button']:active {
+  background-color: #0984e3; /* Original blue on click */
+  transform: translateY(0); /* Reset elevation on click */
+}
+
+button[type='button']:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.6); /* Outline focus for better accessibility */
+}
+
+
 .admin-kp-container h2 {
   font-size: 28px;
   margin-bottom: 20px;

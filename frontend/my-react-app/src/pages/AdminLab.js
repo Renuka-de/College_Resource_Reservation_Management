@@ -1,13 +1,15 @@
 // frontend/pages/AdminLab.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./AdminKP.css"; // Reusing same styling
+import { useNavigate } from "react-router-dom";
+import '../assets/styles/AdminKP.css'; 
 
 const AdminLab = () => {
   const [labRooms, setLabRooms] = useState([]);
+  const navigate=useNavigate();
   const [newLab, setNewLab] = useState({
     name: "",
-    location: "CSE", // or "Lab-CSE" based on your backend setup
+    location: "CSE", 
     type: "Lab",
   });
   const [error, setError] = useState("");
@@ -82,6 +84,7 @@ const AdminLab = () => {
           </li>
         ))}
       </ul>
+      <button type='button' onClick={() =>  navigate('/admin-dashboard') }>Go Back</button>
     </div>
   );
 };

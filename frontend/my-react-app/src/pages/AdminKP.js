@@ -1,10 +1,12 @@
 //frontend/pages/AdminKP.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./AdminKP.css"; // Optional for styling
+import '../assets/styles/AdminKP.css'; // Optional for styling
+import { useNavigate } from 'react-router-dom';
 
 const AdminKP = () => {
   const [kpRooms, setKpRooms] = useState([]);
+  const navigate = useNavigate();
   const [newRoom, setNewRoom] = useState({
     name: "",
     location: "KP",
@@ -32,7 +34,7 @@ const AdminKP = () => {
     try {
       const res = await axios.post("http://localhost:5000/api/resources/add", newRoom, {
         headers: {
-          "x-user-role":"admin" // replace this with actual email if needed
+          "x-user-role":"admin" 
         },
       });
       setNewRoom({ name: "", location: "KP", type: "Classroom" });
@@ -47,7 +49,7 @@ const AdminKP = () => {
     try {
       await axios.delete(`http://localhost:5000/api/resources/delete/${id}`, {
         headers: {
-          "x-user-role":"admin", // Must be admin for checkAdmin
+          "x-user-role":"admin", 
         },
       });
       fetchKPRooms("KP");
@@ -82,6 +84,8 @@ const AdminKP = () => {
           </li>
         ))}
       </ul>
+      <button type='button' onClick={() =>  navigate('/admin-dashboard') }>Go Back</button>
+
     </div>
   );
 };

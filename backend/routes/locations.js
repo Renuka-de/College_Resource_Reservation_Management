@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 module.exports = () => {
-  const locations = ["KP", "CSE DEPARTMENT"]; // You can expand this
+  const locations = ["KP", "CSE DEPARTMENT"]; 
 
   // GET all available locations
   router.get("/", (req, res) => {

@@ -5,10 +5,15 @@ const { MongoClient } = require("mongodb");
 const cors=require("cors");
 const app = express();
 app.use(express.json());
+
+
+
 //app.use(cors());
 const authRoutes = require("./routes/auth");
 const resourceRoutes = require("./routes/resources");
 const reservationRoutes = require("./routes/reservations");
+const userRoutes = require('./routes/user.js');
+const { sendReminderEmails } = require("./utils/cronJob"); 
 app.use(cors({ origin: "http://localhost:3000" }));
 
 // Check if MONGO_URI is defined
@@ -24,15 +29,20 @@ async function run() {
         await client.connect();
         console.log("✅ MongoDB Connected");
 
-        const db = client.db("CRMS"); // ✅ Fix applied
+        const db = client.db("CRMS"); 
 
         app.use("/api/auth", authRoutes(db));
         app.use("/api/resources", resourceRoutes(db));
         app.use("/api/reservations", reservationRoutes(db));
+        app.use('/api/user', userRoutes(db)); 
+       
+        sendReminderEmails();  
+
     } catch (err) {
         console.error("❌ MongoDB Connection Error:", err);
     }
 }
+
 
 run().catch(console.dir);
 

@@ -1,11 +1,11 @@
 // src/pages/UserDashboard.js
 
-import React, { useState } from 'react';
-import './Dashboard.css';
-import kpImage from './kp.jpeg';
-import logo from './logo.png';
+import React from 'react';
+import '../assets/styles/Dashboard.css';
+import kpImage from '../assets/uploads/kp.jpeg';
 import { useNavigate } from 'react-router-dom';
-import Cse from './CSE.png';
+import Cse from '../assets/uploads/CSE.png';
+import MyReservations from '../assets/uploads/reservation.jpg';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -19,13 +19,20 @@ const Dashboard = () => {
   };
 
   const handleMyReservations = () => {
-    navigate('/my-reservations'); // ✅ Navigate to new page
+    navigate('/my-reservations'); 
+  };
+
+  const handleGoBack = () => {
+    navigate('/'); // Navigate back to login page
   };
 
   return (
     <div className="dashboard-container">
       <div className="overlay"></div>
       <div className="dashboard-content">
+        <button className="back-button1" onClick={handleGoBack}>
+        ← Back to Login
+        </button>
         <h2 className="text-center mb-5 text-white">Select an Option</h2>
         <div className="row justify-content-center">
           <div className="col-md-4 mb-4">
@@ -49,12 +56,12 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-md-4 mb-4">
-            <div className="card option-card h-100">
-              <img src={logo} className="card-img-top" alt="Reservations" />
+            <div className="card option-card h-120">
+              <img src={MyReservations} className="card-img-top" alt="Reservations" />
               <div className="card-body text-center">
                 <h5 className="card-title">My Reservations</h5>
-                <p className="card-text">View your room and lab bookings.</p>
-                <button className="btn btn-success" onClick={handleMyReservations}>My Reservations</button>
+                <p className="card-text">View and Delete your room and lab bookings.</p>
+                <button className="btn btn-primary" onClick={handleMyReservations}>My Reservations</button>
               </div>
             </div>
           </div>
@@ -65,4 +72,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

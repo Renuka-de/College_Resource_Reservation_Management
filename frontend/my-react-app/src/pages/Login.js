@@ -1,7 +1,7 @@
 //frontend/my-react-app/pages/Login.js
 import React, { useState } from "react";
 import axios from "axios";
-import "./Login.css";
+import "../assets/styles/Login.css";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = ({ onLogin }) => {
@@ -9,9 +9,9 @@ const LoginPage = ({ onLogin }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const role="User"
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); // new state for success message
+  const [success, setSuccess] = useState(""); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -36,7 +36,6 @@ const LoginPage = ({ onLogin }) => {
       // For login or if user is returned during register
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("userEmail", user.email);
-      
       if (onLogin) onLogin(user);
 
       if (user.role === "admin") {
@@ -46,7 +45,7 @@ const LoginPage = ({ onLogin }) => {
       }
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong");
-      setSuccess(""); // clear success if there's an error
+      setSuccess(""); 
     }
   };
 
@@ -103,14 +102,13 @@ const LoginPage = ({ onLogin }) => {
           {isRegister && (
             <div className="form-group">
               <label>Role:</label>
-              <select
-                className="form-control"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
+              <input
+              type="text"
+              className="form-control"
+              name="Role"
+              value={role}
+              disabled
+            />
             </div>
           )}
 

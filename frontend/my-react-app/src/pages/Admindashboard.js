@@ -1,37 +1,34 @@
 // src/pages/AdminDashboard.js
 
-import React, { useState } from 'react';
-import './Dashboard.css';
-import kpImage from './kp.jpeg'; // Ensure this is your KP image
-import logo from './logo.png';  // Make sure the logo image exists in your directory
+import React from 'react';
+import '../assets/styles/Dashboard.css';
+import kpImage from '../assets/uploads/kp.jpeg'; 
 import { useNavigate } from 'react-router-dom';
-import Cse from './CSE.png';
+import Cse from '../assets/uploads/CSE.png';
 
 const Dashboard1 = () => {
   const navigate = useNavigate();
-  //const [selectedDept, setSelectedDept] = useState('');
+  
 
   const handleKPClick = () => {
     navigate('/admin-kp');
   };
 
   const handleLabRegister = () => {
-    //if (selectedDept) {
-      navigate(`/admin-lab`); // Correct the route path here
-    //} else {
-     // alert('Please select a department.');
-    //}
+    
+      navigate('/admin-lab'); 
   };
-
-  const departments = [
-    'Computer Science and Engineering',
-    // Add more departments as needed
-  ];
+  const handleGoBack = () => {
+    navigate('/'); // Navigate back to login page
+  };
 
   return (
     <div className="dashboard-container">
       <div className="overlay"></div>
       <div className="dashboard-content">
+      <button className="back-button1" onClick={handleGoBack}>
+        ← Back to Login
+        </button>
         <h2 className="text-center mb-5 text-white">Select an Option</h2>
         <div className="row justify-content-center">
           <div className="col-md-5 mb-4">

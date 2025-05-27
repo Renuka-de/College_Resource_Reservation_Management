@@ -1,0 +1,270 @@
+/* UserKP.css */
+
+.dashboard-container {
+  position: relative;
+  min-height: 100vh;
+  background-image: url("../uploads/logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  background-color: #000;
+}
+
+
+.user-kp-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background: url('../uploads/kp.jpeg') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.user-kp-box h2 {
+  font-family: Roboto Slab, Roboto Slab; /* or your preferred font */
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+
+.user-cse-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background: url('../uploads/CSE.png') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.user-kp-overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(127, 124, 124, 0.7); /* translucent white */
+  z-index: 1;
+}
+
+.user-kp-box {
+  position: relative;
+  z-index: 2;
+  background: #ffffffdd;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 400px;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: fadeInPopup 2s forwards;
+}
+
+@keyframes fadeInPopup {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.user-kp-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.filter-form input[type="date"],
+.filter-form input[type="time"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.filter-form button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.filter-form button:hover {
+  background: linear-gradient(135deg, #0056b3, #00a2cc);
+}
+
+.error {
+  margin-top: 10px;
+  color: red;
+  font-size: 14px;
+}
+
+
+.user-kp-container1 {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.user-kp-container1 h2 {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error {
+  color: #dc3545;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Room Grid Layout */
+.room-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 10px;
+}
+
+/* Base Room Card Styles */
+.room-card {
+  position: relative;
+  height: 180px;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background-image: url("../uploads/classroom.jpeg");
+  background-size: cover;
+  background-position: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+/* Common pseudo-element for overlay */
+.room-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4); /* Default semi-dark overlay */
+  z-index: 1;
+}
+
+/* Booked Room Specific Styles */
+.room-card.booked {
+  position: relative;
+}
+
+.room-card.booked::before {
+  background: rgba(0, 0, 0, 0.7); /* Darker overlay for booked rooms */
+}
+
+/* Room Card Content */
+.room-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.room-status {
+  position: relative;
+  z-index: 2;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0 auto; 
+  width: fit-content;
+}
+
+/* Status-specific colors */
+.room-status.available {
+  background-color: #28a745;
+  color: white;
+}
+
+.room-status.booked {
+  background-color: #dc3545;
+  color: white;
+}
+
+.room-purpose {
+  position: relative;
+  z-index: 2;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+}
+
+/* Hover Effects */
+.room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.room-card.booked:hover {
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .room-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+  
+  .room-card {
+    height: 150px;
+    padding: 10px;
+  }
+  
+  .room-name {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .room-grid {
+    grid-template-columns: 1fr;
+  }
+}

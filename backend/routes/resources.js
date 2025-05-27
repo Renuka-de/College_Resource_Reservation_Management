@@ -115,18 +115,6 @@ router.patch("/update/:id", async (req, res) => {
     res.status(404).json({ message: "Room not found or availability not updated" });
   }
 });
-/*router.get("/:resourceId", async (req, res) => {
-  const { resourceId } = req.params;
-  try {
-    const resource = await resources.findOne({ _id: new ObjectId(resourceId) });
-    if (!resource) {
-      return res.status(404).json({ message: "Resource not found" });
-    }
-    res.json(resource); // Return the resource details
-  } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});*/
 
   return router;
 };

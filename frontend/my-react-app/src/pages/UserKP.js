@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./UserKP.css";
+import "../assets/styles/UserKP.css";
 
 const UserKP = () => {
   const [filters, setFilters] = useState({
@@ -16,7 +16,7 @@ const UserKP = () => {
 
   const handleInputChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
-    setError(""); // Clear error when changing inputs
+    setError(""); 
   };
 
   const handleSearch = () => {
@@ -97,5 +97,3 @@ const UserKP = () => {
 };
 
 export default UserKP;
-
-
