@@ -100,7 +100,30 @@ npm start
 
 ## Screenshots
 
-> *Add screenshots of login, dashboard, booking, and email examples here once UI is ready.*
+### Login and Register Page
+  
+![image](https://github.com/user-attachments/assets/0f7476fc-e7e1-4e57-aedc-6cfcbc362848)
+
+![image](https://github.com/user-attachments/assets/d2b42042-4d0c-4e81-8aed-48474f20b33e)
+
+### Admin Page
+
+![image](https://github.com/user-attachments/assets/1bf9d3dd-9fa8-4dd3-9aa1-b590c614ea75)
+
+![image](https://github.com/user-attachments/assets/c6ec3c0b-fc1f-4d17-bbb2-a33660d19d40)
+
+
+### User Page
+
+![Screenshot 2025-05-27 153415](https://github.com/user-attachments/assets/09d81999-b426-4e35-ad37-bb526afaf4be)
+
+![image](https://github.com/user-attachments/assets/4e10b208-045c-436d-9940-ac8bd7b309c3)
+
+![Screenshot 2025-05-27 153656](https://github.com/user-attachments/assets/366f8aaf-1593-47af-86f7-b84d57751ea4)
+
+![Screenshot 2025-05-27 153737](https://github.com/user-attachments/assets/bada3828-bf23-471b-b783-2dbfbee4ffbc)
+
+![Screenshot 2025-05-27 153839](https://github.com/user-attachments/assets/70114b8a-412b-4249-9361-8356757628bc)
 
 ## Future Enhancements
 ### Mobile App Version
