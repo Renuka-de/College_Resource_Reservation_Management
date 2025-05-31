@@ -8,7 +8,7 @@ A full-stack web application to manage the reservation of shared resources in ac
   Role-based login system for Students, Faculty, and Admins using secure authentication practices.
 
 - **Role-Based Access Control**  
-  Admins can add/update/delete resources, while users can only book or cancel based on their permissions.
+  Admins can add/delete resources, while users can only book or cancel based on their permissions.
 
 - **Resource Management**  
   Admins can manage resource details (grouped by location) via a user-friendly interface.
@@ -33,7 +33,7 @@ A full-stack web application to manage the reservation of shared resources in ac
 - **Frontend**: React.js (in progress)
 - **Backend**: Node.js, Express.js
 - **Database**: MongoDB
-- **Tools**: Postman / Thunder Client, VS Code, Git
+- **Tools**: Postman, VS Code, Git
 
 ## Module Overview
 
@@ -43,7 +43,7 @@ A full-stack web application to manage the reservation of shared resources in ac
 - Access is restricted based on role.
 
 ### 2. Resource Management Module
-- Admins can add, update, or delete resources.
+- Admins can add or delete resources.
 - Resources are tagged by location (e.g., KP, CSE Dept).
 - Stored securely in MongoDB.
 
@@ -130,7 +130,7 @@ npm start
 - Develop a mobile-friendly interface for booking and managing resources.
 
 ### Admin Reservation Priority Control
-- Empower Admins with advanced booking controls:
+Empower Admins with advanced booking controls:
 
 - Override existing bookings for high-priority events.
 
