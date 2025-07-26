@@ -2,19 +2,47 @@
 require("dotenv").config();
 const express = require("express");
 const { MongoClient } = require("mongodb");
-const cors=require("cors");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 const app = express();
-app.use(express.json());
 
+// Security middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Global rate limiting
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200, // limit each IP to 200 requests per windowMs (increased from 100)
+  message: { message: "Too many requests from this IP, please try again later" },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
-//app.use(cors());
+app.use(globalLimiter);
+
+// CORS configuration
+app.use(cors({ 
+  origin: "http://localhost:3000",
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
+// Import routes
 const authRoutes = require("./routes/auth");
 const resourceRoutes = require("./routes/resources");
 const reservationRoutes = require("./routes/reservations");
 const userRoutes = require('./routes/user.js');
-const { sendReminderEmails } = require("./utils/cronJob"); 
-app.use(cors({ origin: "http://localhost:3000" }));
+const { sendReminderEmails } = require("./utils/cronJob");
 
 // Check if MONGO_URI is defined
 if (!process.env.MONGO_URI) {

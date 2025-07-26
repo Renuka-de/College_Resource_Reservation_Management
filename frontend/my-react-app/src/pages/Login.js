@@ -1,6 +1,6 @@
 //frontend/my-react-app/pages/Login.js
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { login, register, verifyToken } from "../utils/auth";
 import "../assets/styles/Login.css";
 import { useNavigate } from "react-router-dom";
 
@@ -9,44 +9,82 @@ const LoginPage = ({ onLogin }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const role="User"
+  const role = "User";
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); 
+  const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const endpoint = isRegister ? "/api/auth/register" : "/api/auth/login";
+  // Check for existing token on component mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    
+    if (token && user) {
+      // Verify token is still valid
+      verifyTokenOnMount(token);
+    }
+  }, []);
 
+  const verifyTokenOnMount = async (token) => {
     try {
-      const payload = isRegister
-        ? { name, email, password, role }
-        : { email, password };
-
-      const res = await axios.post(endpoint, payload);
-      const user = res.data.user;
-
-      if (isRegister && !user) {
-        setSuccess("Registered successfully. Please login.");
-        setError("");
-        setIsRegister(false); // switch to login form
-        return;
-      }
-
-      // For login or if user is returned during register
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("userEmail", user.email);
+      const user = await verifyToken();
       if (onLogin) onLogin(user);
-
+      
+      // Redirect based on role
       if (user.role === "admin") {
         navigate("/admin-dashboard");
       } else {
         navigate("/user-dashboard");
       }
-    } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong");
-      setSuccess(""); 
+    } catch (error) {
+      // Token is invalid, clear storage
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("userEmail");
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      if (isRegister) {
+        await register(name, email, password, role);
+        setSuccess("Registered successfully. Please login.");
+        setError("");
+        setIsRegister(false); // switch to login form
+        setIsLoading(false);
+        return;
+      } else {
+        const { user, token } = await login(email, password);
+        
+        if (onLogin) onLogin(user);
+
+        if (user.role === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/user-dashboard");
+        }
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Something went wrong";
+      setError(errorMessage);
+      setSuccess("");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const clearForm = () => {
+    setName("");
+    setEmail("");
+    setPassword("");
+    setError("");
+    setSuccess("");
   };
 
   return (
@@ -71,6 +109,7 @@ const LoginPage = ({ onLogin }) => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your name"
                 required
+                disabled={isLoading}
               />
             </div>
           )}
@@ -84,6 +123,7 @@ const LoginPage = ({ onLogin }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="Enter your email"
+              disabled={isLoading}
             />
           </div>
 
@@ -96,6 +136,7 @@ const LoginPage = ({ onLogin }) => {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="Enter your password"
+              disabled={isLoading}
             />
           </div>
 
@@ -103,17 +144,21 @@ const LoginPage = ({ onLogin }) => {
             <div className="form-group">
               <label>Role:</label>
               <input
-              type="text"
-              className="form-control"
-              name="Role"
-              value={role}
-              disabled
-            />
+                type="text"
+                className="form-control"
+                name="Role"
+                value={role}
+                disabled
+              />
             </div>
           )}
 
-          <button type="submit" className="btn-primary">
-            {isRegister ? "Register" : "Login"}
+          <button 
+            type="submit" 
+            className="btn-primary"
+            disabled={isLoading}
+          >
+            {isLoading ? "Processing..." : (isRegister ? "Register" : "Login")}
           </button>
         </form>
 
@@ -122,8 +167,7 @@ const LoginPage = ({ onLogin }) => {
           <span
             style={{ color: "#007bff", cursor: "pointer" }}
             onClick={() => {
-              setError("");
-              setSuccess("");
+              clearForm();
               setIsRegister(!isRegister);
             }}
           >

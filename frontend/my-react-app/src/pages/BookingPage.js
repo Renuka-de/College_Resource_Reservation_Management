@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import api from '../utils/auth';
 import '../assets/styles/BookingPage.css';
 
 const BookingPage = () => {
@@ -24,7 +24,7 @@ const BookingPage = () => {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/resources/${roomId}`);
+        const res = await api.get(`/api/resources/${roomId}`);
         setRoom(res.data);
       } catch (err) {
         setError("Failed to load room details.");
@@ -40,7 +40,7 @@ const BookingPage = () => {
   const handleBook = async () => {
     try {
       // Step 1: Check for existing reservation with same purpose
-      const conflictCheck = await axios.get(`http://localhost:5000/api/reservations/check-purpose`, {
+      const conflictCheck = await api.get(`/api/reservations/check-purpose`, {
         params: {
           resourceId: roomId,
           date: form.date,
@@ -59,9 +59,12 @@ const BookingPage = () => {
       }
 
       // Step 2: Proceed with booking
-      await axios.post(`http://localhost:5000/api/reservations/book`, {
+      await api.post(`/api/reservations/book`, {
         resourceId: roomId,
-        ...form,
+        date: form.date,
+        startTime: form.startTime,
+        endTime: form.endTime,
+        purpose: form.purpose,
       });
 
       alert("Room booked successfully!");

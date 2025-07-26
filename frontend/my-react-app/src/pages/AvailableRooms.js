@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from '../utils/auth';
 import "../assets/styles/UserKP.css";
 
 const AvailableRooms = () => {
@@ -17,7 +17,7 @@ const AvailableRooms = () => {
       }
 
       try {
-        const res = await axios.get("http://localhost:5000/api/reservations/available", {
+        const res = await api.get("/api/reservations/available", {
           params: {
             date: state.date,
             startTime: state.startTime,

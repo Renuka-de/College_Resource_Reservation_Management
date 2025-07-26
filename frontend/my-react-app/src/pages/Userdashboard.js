@@ -6,6 +6,7 @@ import kpImage from '../assets/uploads/kp.jpeg';
 import { useNavigate } from 'react-router-dom';
 import Cse from '../assets/uploads/CSE.png';
 import MyReservations from '../assets/uploads/reservation.jpg';
+import { logout } from '../utils/auth';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -22,7 +23,8 @@ const Dashboard = () => {
     navigate('/my-reservations'); 
   };
 
-  const handleGoBack = () => {
+  const handleLogout = () => {
+    logout();
     navigate('/'); // Navigate back to login page
   };
 
@@ -30,8 +32,8 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <div className="overlay"></div>
       <div className="dashboard-content">
-        <button className="back-button1" onClick={handleGoBack}>
-        ← Back to Login
+        <button className="back-button1" onClick={handleLogout}>
+        ← Logout
         </button>
         <h2 className="text-center mb-5 text-white">Select an Option</h2>
         <div className="row justify-content-center">

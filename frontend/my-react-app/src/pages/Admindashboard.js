@@ -5,6 +5,7 @@ import '../assets/styles/Dashboard.css';
 import kpImage from '../assets/uploads/kp.jpeg'; 
 import { useNavigate } from 'react-router-dom';
 import Cse from '../assets/uploads/CSE.png';
+import { logout } from '../utils/auth';
 
 const Dashboard1 = () => {
   const navigate = useNavigate();
@@ -18,7 +19,8 @@ const Dashboard1 = () => {
     
       navigate('/admin-lab'); 
   };
-  const handleGoBack = () => {
+  const handleLogout = () => {
+    logout();
     navigate('/'); // Navigate back to login page
   };
 
@@ -26,9 +28,9 @@ const Dashboard1 = () => {
     <div className="dashboard-container">
       <div className="overlay"></div>
       <div className="dashboard-content">
-      <button className="back-button1" onClick={handleGoBack}>
-        ← Back to Login
-        </button>
+            <button className="back-button1" onClick={handleLogout}>
+        ← Logout
+      </button>
         <h2 className="text-center mb-5 text-white">Select an Option</h2>
         <div className="row justify-content-center">
           <div className="col-md-5 mb-4">

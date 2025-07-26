@@ -1,6 +1,6 @@
 //src/pages/MyReservations.js
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import '../assets/styles/MyReservations.css';
 
@@ -25,9 +25,7 @@ const MyReservations = () => {
     }
 
     try {
-      const res = await axios.get("http://localhost:5000/api/reservations/my", {
-        headers: { "x-user-email": userEmail },
-      });
+      const res = await api.get("/api/reservations/my");
       setReservations(res.data);
     } catch (err) {
       console.error(err);
@@ -41,10 +39,7 @@ const MyReservations = () => {
     }
 
     try {
-      await axios.delete(
-        `http://localhost:5000/api/reservations/cancel/${reservationId}`,
-        { headers: { "x-user-email": userEmail } }
-      );
+      await api.delete(`/api/reservations/cancel/${reservationId}`);
       setSuccess("Reservation cancelled successfully!");
       fetchReservations();
       setTimeout(() => setSuccess(""), 3000);

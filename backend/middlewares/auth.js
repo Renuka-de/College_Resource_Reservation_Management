@@ -14,10 +14,6 @@ module.exports = (db) => {
         process.env.JWT_SECRET || "your-secret-key-change-in-production"
       );
 
-      if (decoded.role !== "admin") {
-        return res.status(403).json({ message: "Access denied. Admins only." });
-      }
-
       // Add user info to request for use in route handlers
       req.user = decoded;
       next();
@@ -28,9 +24,8 @@ module.exports = (db) => {
       if (error.name === "JsonWebTokenError") {
         return res.status(401).json({ message: "Invalid token." });
       }
-      console.error("Admin middleware error:", error);
+      console.error("Auth middleware error:", error);
       return res.status(500).json({ message: "Internal server error." });
     }
   };
-};
-  
+}; 

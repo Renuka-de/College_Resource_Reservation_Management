@@ -1,0 +1,50 @@
+/* Booked Room Styling */
+.room-card.booked {
+  cursor: not-allowed;
+  border-color: #dc3545;
+}
+
+.room-card.booked::before {
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+}
+
+.room-card.booked:hover::before {
+  background: rgba(0, 0, 0, 0.6); /* Darker on hover */
+}
+
+.room-card.booked .room-name,
+.room-card.booked .room-capacity {
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.room-card.booked .room-status {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Add a small blackboard-like element */
+.room-card::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 8px;
+  background: #333;
+  border-radius: 4px 4px 0 0;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .room-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+  
+  .room-card .room-name {
+    font-size: 1.2rem;
+  }
+}

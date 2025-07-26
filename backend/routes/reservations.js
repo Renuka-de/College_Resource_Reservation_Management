@@ -3,15 +3,21 @@ const express = require("express");
 const { ObjectId } = require("mongodb");
 const router = express.Router();
 const { sendEmail } = require('../utils/mailer');
+const auth = require('../middlewares/auth');
 
 
 
 module.exports = (db) => {
   const reservations = db.collection("reservations");
   const resources = db.collection("resources");
+  const authMiddleware = auth(db);
 
-router.post("/book", async (req, res) => {
-  const { resourceId, userEmail, userName, date, startTime, endTime, purpose } = req.body;
+router.post("/book", authMiddleware, async (req, res) => {
+  const { resourceId, date, startTime, endTime, purpose } = req.body;
+  const userEmail = req.user.email; // Get from JWT token
+  const userName = req.user.name; // Get from JWT token
+  
+  console.log("Booking request:", { userEmail, userName, resourceId, date, startTime, endTime, purpose });
 
   try {
     const resources = db.collection('resources');
@@ -158,9 +164,9 @@ College Resource Reservation Management Team`;
     });
 
 
-  router.delete("/cancel/:reservationId", async (req, res) => {
+  router.delete("/cancel/:reservationId", authMiddleware, async (req, res) => {
     const { reservationId } = req.params;
-    const userEmail = req.headers["x-user-email"];
+    const userEmail = req.user.email; // Get from JWT token
     
   
     try {
@@ -210,13 +216,15 @@ College Resource Reservation Management Team`;
   });
 
 
-router.get("/my", async (req, res) => {
-  const userEmail = req.headers["x-user-email"];
+router.get("/my", authMiddleware, async (req, res) => {
+  const userEmail = req.user.email; // Get from JWT token
+  console.log("Fetching reservations for user:", userEmail);
 
   try {
     const myReservations = await reservations.find({ userEmail })
       .sort({ date: 1, startTime: 1 }) // Sort by date and time
       .toArray();
+    console.log("Found reservations:", myReservations.length);
     res.json(myReservations);
   } catch (error) {
     console.error("Fetching user reservations failed:", error);

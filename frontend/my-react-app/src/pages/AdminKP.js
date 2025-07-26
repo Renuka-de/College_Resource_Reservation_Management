@@ -1,6 +1,6 @@
 //frontend/pages/AdminKP.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from '../utils/auth';
 import '../assets/styles/AdminKP.css'; // Optional for styling
 import { useNavigate } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ const AdminKP = () => {
   // Fetch KP rooms from backend
   const fetchKPRooms = async (location) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/resources/list?location=${location}`);
+      const res = await api.get(`/api/resources/list?location=${location}`);
       setKpRooms(res.data);
     } catch (err) {
       setError("Failed to load rooms");
@@ -32,11 +32,7 @@ const AdminKP = () => {
   const handleAddRoom = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/resources/add", newRoom, {
-        headers: {
-          "x-user-role":"admin" 
-        },
-      });
+      const res = await api.post("/api/resources/add", newRoom);
       setNewRoom({ name: "", location: "KP", type: "Classroom" });
       fetchKPRooms("KP");
     } catch (err) {
@@ -47,11 +43,7 @@ const AdminKP = () => {
   // Handle deleting a room
   const handleDeleteRoom = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/resources/delete/${id}`, {
-        headers: {
-          "x-user-role":"admin", 
-        },
-      });
+      await api.delete(`/api/resources/delete/${id}`);
       fetchKPRooms("KP");
     } catch (err) {
       setError("Failed to delete room");

@@ -5,6 +5,7 @@ const router = express.Router();
 const checkAdmin = require("../middlewares/checkAdmin");
 
 module.exports = (db) => {
+  const checkAdminMiddleware = checkAdmin(db);
   const resourceCollection = db.collection("resources");
   
   // View all resources
@@ -36,7 +37,7 @@ module.exports = (db) => {
     }
   });
   // Add a new resource
-  router.post("/add", checkAdmin, async (req, res) => {
+  router.post("/add", checkAdminMiddleware, async (req, res) => {
     const { name, type, location } = req.body;
     if (!name || !type || !location) {
       return res.status(400).json({ message: "All fields required" });
@@ -84,7 +85,7 @@ module.exports = (db) => {
   
 
   // Delete a resource
-  router.delete("/delete/:id", checkAdmin, async (req, res) => {
+  router.delete("/delete/:id", checkAdminMiddleware, async (req, res) => {
     try {
       const { id } = req.params;
       const result = await resourceCollection.deleteOne({ _id: new ObjectId(id) });

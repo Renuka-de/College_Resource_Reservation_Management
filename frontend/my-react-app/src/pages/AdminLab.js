@@ -1,6 +1,6 @@
 // frontend/pages/AdminLab.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from '../utils/auth';
 import { useNavigate } from "react-router-dom";
 import '../assets/styles/AdminKP.css'; 
 
@@ -17,7 +17,7 @@ const AdminLab = () => {
   // Fetch CSE Lab rooms from backend
   const fetchLabRooms = async (location) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/resources/list?location=${location}`);
+      const res = await api.get(`/api/resources/list?location=${location}`);
       setLabRooms(res.data);
     } catch (err) {
       setError("Failed to load lab resources");
@@ -32,11 +32,7 @@ const AdminLab = () => {
   const handleAddLab = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/resources/add", newLab, {
-        headers: {
-          "x-user-role": "admin",
-        },
-      });
+      await api.post("/api/resources/add", newLab);
       setNewLab({ name: "", location: "CSE", type: "Lab" });
       fetchLabRooms("CSE");
     } catch (err) {
@@ -47,11 +43,7 @@ const AdminLab = () => {
   // Handle deleting a lab
   const handleDeleteLab = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/resources/delete/${id}`, {
-        headers: {
-          "x-user-role": "admin",
-        },
-      });
+      await api.delete(`/api/resources/delete/${id}`);
       fetchLabRooms("CSE");
     } catch (err) {
       setError("Failed to delete lab resource");
