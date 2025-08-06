@@ -2,6 +2,13 @@
 
 A full-stack web application to manage the reservation of shared resources in academic institutions, built using the MERN stack. This system ensures fair usage, prevents scheduling conflicts, and supports role-based access for secure and efficient resource handling. It is scalable for future enhancements like mobile apps and AI-based suggestions.
 
+## Team Members
+
+- **Renuka Devi A C**
+- **Shiyamala Devi**
+- **Sindhulakshmi E**
+- **Kirupa V**
+
 ## Features
 
 - **User Authentication**  
