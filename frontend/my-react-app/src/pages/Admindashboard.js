@@ -5,6 +5,7 @@ import '../assets/styles/Dashboard.css';
 import kpImage from '../assets/uploads/kp.jpeg'; 
 import { useNavigate } from 'react-router-dom';
 import Cse from '../assets/uploads/CSE.png';
+import classroomImage from '../assets/uploads/classroom.jpeg';
 import { logout } from '../utils/auth';
 
 const Dashboard1 = () => {
@@ -19,6 +20,11 @@ const Dashboard1 = () => {
     
       navigate('/admin-lab'); 
   };
+
+  const handleBookClassrooms = () => {
+    navigate('/book-classrooms');
+  };
+
   const handleLogout = () => {
     logout();
     navigate('/'); // Navigate back to login page
@@ -52,6 +58,16 @@ const Dashboard1 = () => {
                             <button className="btn btn-primary" onClick={handleLabRegister}>Manage Labs</button>
                           </div>
                         </div>
+          </div>
+          <div className="col-md-5 mb-4">
+            <div className="card option-card h-100">
+              <img src={classroomImage} className="card-img-top" alt="Classrooms" />
+              <div className="card-body text-center">
+                <h5 className="card-title">Book Classrooms</h5>
+                <p className="card-text">Book available classrooms for your needs</p>
+                <button className="btn btn-primary" onClick={handleBookClassrooms}>Book Classrooms</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

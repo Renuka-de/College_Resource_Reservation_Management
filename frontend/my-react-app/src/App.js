@@ -11,6 +11,7 @@ import AdminLab from "./pages/AdminLab";
 import UserLab from "./pages/UserLab";
 import AvailableRooms from "./pages/AvailableRooms";
 import MyReservations from "./pages/MyReservations";
+import BookClassrooms from "./pages/BookClassrooms";
 import { isAuthenticated, isAdmin, requireAuth, requireAdmin } from "./utils/auth";
 
 // Protected Route Components
@@ -104,6 +105,14 @@ function App() {
           element={
             <ProtectedRoute requireAdminAccess={true}>
               <AdminLab />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/book-classrooms" 
+          element={
+            <ProtectedRoute requireAdminAccess={true}>
+              <BookClassrooms />
             </ProtectedRoute>
           } 
         />
