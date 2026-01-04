@@ -1,11 +1,16 @@
 const cron = require('node-cron');
 const { sendEmail } = require('./mailer'); 
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
-// MongoDB connection setup
-const client = new MongoClient(process.env.MONGO_URI);
 const dbName = "CRMS"; 
 const sendReminderEmails = async () => {
+  if (!process.env.MONGO_URI) {
+    console.error("❌ MONGO_URI is not defined. Cannot send reminder emails.");
+    return;
+  }
+
+  const client = new MongoClient(process.env.MONGO_URI);
   try {
     // Connect to the database
     await client.connect();
@@ -50,6 +55,9 @@ College Resource Reservation Management Team`;
     console.log("✅ Sent reservation reminders for tomorrow.");
   } catch (error) {
     console.error("❌ Error sending reminders:", error);
+  } finally {
+    // Close the connection after use
+    await client.close();
   }
 };
 
