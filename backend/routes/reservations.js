@@ -5,6 +5,7 @@ const router = express.Router();
 const { sendEmail } = require('../utils/mailer');
 const auth = require('../middlewares/auth');
 const multer = require('multer');
+const { processUploadedPdf } = require('../utils/pdfWorkflow');
 const upload = multer({ storage: multer.memoryStorage() });
 
 
@@ -255,66 +256,41 @@ router.get("/my", authMiddleware, async (req, res) => {
         return res.status(400).json({ message: "Start date must be before or equal to end date" });
       }
 
-      // Parse PDF first - pdf-parse v1.x works as a direct function
-      let pdfData;
+      let parsedPdf;
       try {
-        const pdfParse = require('pdf-parse');
-        pdfData = await pdfParse(req.file.buffer);
+        parsedPdf = await processUploadedPdf(req.file.buffer, {
+          startDate,
+          endDate,
+          userName: req.user.name,
+          batchName: null
+        });
       } catch (error) {
         console.error('PDF parsing error:', error);
-        return res.status(400).json({ 
-          message: `Error parsing PDF: ${error.message}. Please ensure the PDF is readable and not corrupted.` 
+        return res.status(400).json({
+          message: `Error parsing PDF: ${error.message}. Please ensure the PDF is readable and not corrupted.`
         });
       }
 
-      const text = pdfData.text;
+      const { batchName, slots: timetableData, classification, metadata, bookingWindow } = parsedPdf;
 
-      console.log("PDF Text extracted:", text.substring(0, 500));
-
-      // Extract batch name dynamically from PDF
-      // Look for "PROGRAMME AND BRANCH WITH SEMESTER AND BATCH:" pattern first
-      let batchName = null;
-      
-      // Pattern 1: Extract after "PROGRAMME AND BRANCH WITH SEMESTER AND BATCH:"
-      const programmePattern = /PROGRAMME\s+AND\s+BRANCH\s+WITH\s+SEMESTER\s+AND\s+BATCH\s*:\s*([^\n\r]+)/i;
-      let programmeMatch = text.match(programmePattern);
-      
-      if (programmeMatch && programmeMatch[1]) {
-        batchName = programmeMatch[1].trim();
-        console.log("Extracted batch name from PROGRAMME AND BRANCH header:", batchName);
-      } else {
-        // Fallback patterns if the header format is different
-        // Pattern 2: Full "B.E CSE – IV SEMESTER – N BATCH" format
-        const batchPattern1 = /(B\.E\s+CSE\s*[–-]+\s*[IVX]+\s+SEMESTER\s*[–-]+\s*[A-Z\s]+BATCH)/i;
-        // Pattern 3: "B.E CSE – IV SEMESTER – N BATCH" with flexible spacing
-        const batchPattern2 = /(B\.\s*E\s*CSE\s*[–-\s]+\s*[IVX]+\s+SEMESTER\s*[–-\s]+\s*[A-Z\s]+BATCH)/i;
-        // Pattern 4: Any variation with semester and batch
-        const batchPattern3 = /([A-Z\.]+[\.]?\s*CSE\s*[–-\s]+\s*[IVX]+\s+SEMESTER\s*[–-\s]+\s*[A-Z\s]+BATCH)/i;
-        // Pattern 5: Just "N BATCH" or similar standalone (fallback)
-        const batchPattern4 = /([A-Z]+\s+BATCH)/i;
-
-        let batchMatch = text.match(batchPattern1) || text.match(batchPattern2) || text.match(batchPattern3) || text.match(batchPattern4);
-        
-        if (batchMatch) {
-          batchName = (batchMatch[1] || batchMatch[0]).trim();
-          console.log("Extracted batch name using fallback pattern:", batchName);
-        }
+      if (classification.type !== 'timetable') {
+        return res.status(400).json({
+          message: parsedPdf.message || 'The uploaded document does not look like a timetable PDF.'
+        });
       }
 
       if (!batchName) {
-        return res.status(400).json({ 
-          message: "Could not extract batch name from PDF. Please ensure the PDF contains batch information like 'B.E CSE – IV SEMESTER – N BATCH' or similar format." 
+        return res.status(400).json({
+          message: "Could not extract batch name from PDF. Please ensure the PDF contains batch information like 'B.E CSE – IV SEMESTER – N BATCH' or similar format."
         });
       }
 
       const userName = req.user.name || batchName;
-
-      // Extract timetable data from PDF text with date range
-      const timetableData = parseTimetablePDF(text, batchName, startDate, endDate);
+      const bookingOwner = req.user.name || req.user.email || batchName;
 
       if (!timetableData || timetableData.length === 0) {
-        return res.status(400).json({ 
-          message: "Could not extract timetable data from PDF. Please ensure the PDF contains hall numbers (e.g., Hall.No:105) and time slots in a readable format." 
+        return res.status(400).json({
+          message: "Could not extract timetable data from PDF. Please ensure the PDF contains hall numbers (e.g., Hall.No:105) and time slots in a readable format."
         });
       }
 
@@ -414,7 +390,7 @@ router.get("/my", authMiddleware, async (req, res) => {
             resourcename: resource.name,
             location: resource.location,
             userEmail,
-            userName,
+            userName: bookingOwner,
             date: slot.date,
             startTime: slot.startTime,
             endTime: slot.endTime,
