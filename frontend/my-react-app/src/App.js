@@ -12,7 +12,7 @@ import UserLab from "./pages/UserLab";
 import AvailableRooms from "./pages/AvailableRooms";
 import MyReservations from "./pages/MyReservations";
 import BookClassrooms from "./pages/BookClassrooms";
-import { isAuthenticated, isAdmin, requireAuth, requireAdmin } from "./utils/auth";
+import { isAuthenticated, isAdmin } from "./utils/auth";
 
 // Protected Route Components
 const ProtectedRoute = ({ children, requireAdminAccess = false }) => {

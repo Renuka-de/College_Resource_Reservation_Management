@@ -1,5 +1,5 @@
 //frontend/my-react-app/pages/Login.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { login, register, verifyToken } from "../utils/auth";
 import "../assets/styles/Login.css";
 import { useNavigate } from "react-router-dom";
@@ -16,34 +16,31 @@ const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
 
   // Check for existing token on component mount
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
+const verifyTokenOnMount = useCallback(async () => {
+  try {
+    const user = await verifyToken();
+    if (onLogin) onLogin(user);
     
-    if (token && user) {
-      // Verify token is still valid
-      verifyTokenOnMount(token);
+    if (user.role === "admin") {
+      navigate("/admin-dashboard");
+    } else {
+      navigate("/user-dashboard");
     }
-  }, []);
+  } catch (error) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userEmail");
+  }
+}, [onLogin, navigate]);
 
-  const verifyTokenOnMount = async (token) => {
-    try {
-      const user = await verifyToken();
-      if (onLogin) onLogin(user);
-      
-      // Redirect based on role
-      if (user.role === "admin") {
-        navigate("/admin-dashboard");
-      } else {
-        navigate("/user-dashboard");
-      }
-    } catch (error) {
-      // Token is invalid, clear storage
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      localStorage.removeItem("userEmail");
-    }
-  };
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+  
+  if (token && user) {
+    verifyTokenOnMount();
+  }
+}, [verifyTokenOnMount]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +57,7 @@ const LoginPage = ({ onLogin }) => {
         setIsLoading(false);
         return;
       } else {
-        const { user, token } = await login(email, password);
+        const { user} = await login(email, password);
         
         if (onLogin) onLogin(user);
 

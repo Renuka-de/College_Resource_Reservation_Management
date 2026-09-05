@@ -1,5 +1,5 @@
 //src/pages/MyReservations.js
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import api from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import '../assets/styles/MyReservations.css';
@@ -14,24 +14,24 @@ const MyReservations = () => {
   const userName = userobj.name;
   const userEmail = userobj.email;
 
-  useEffect(() => {
-    fetchReservations();
-  }, []);
+  const fetchReservations = useCallback(async () => {
+  if (!userEmail) {
+    setError("Please login to view your reservations.");
+    return;
+  }
 
-  const fetchReservations = async () => {
-    if (!userEmail) {
-      setError("Please login to view your reservations.");
-      return;
-    }
+  try {
+    const res = await api.get("/api/reservations/my");
+    setReservations(res.data);
+  } catch (err) {
+    console.error(err);
+    setError("Failed to fetch your reservations.");
+  }
+}, [userEmail]);
 
-    try {
-      const res = await api.get("/api/reservations/my");
-      setReservations(res.data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to fetch your reservations.");
-    }
-  };
+useEffect(() => {
+  fetchReservations();
+}, [fetchReservations]);
 
   const handleDelete = async (reservationId) => {
     if (!window.confirm("Are you sure you want to cancel this reservation?")) {

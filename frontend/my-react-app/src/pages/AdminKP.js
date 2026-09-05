@@ -32,7 +32,7 @@ const AdminKP = () => {
   const handleAddRoom = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/api/resources/add", newRoom);
+      await api.post("/api/resources/add", newRoom);
       setNewRoom({ name: "", location: "KP", type: "Classroom" });
       fetchKPRooms("KP");
     } catch (err) {
