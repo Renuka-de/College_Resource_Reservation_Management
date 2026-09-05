@@ -1,9 +1,20 @@
-// Script to hash admin password for specific user
+// Create a new admin user in the students collection.
 require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const bcrypt = require("bcryptjs");
 
-async function hashAdminPassword() {
+async function createAdmin() {
+  const [name, email, plainPassword] = process.argv.slice(2);
+
+  if (!name || !email || !plainPassword) {
+    throw new Error('Usage: node hash-admin-password.js "Admin Name" admin@example.com password');
+  }
+
+  if (plainPassword.length < 6) {
+    throw new Error("Password must be at least 6 characters long");
+  }
+
+  const normalizedEmail = email.toLowerCase().trim();
   const client = new MongoClient(process.env.MONGO_URI || "mongodb://localhost:27017");
   
   try {
@@ -12,69 +23,23 @@ async function hashAdminPassword() {
     
     const db = client.db("CRMS");
     const usersCollection = db.collection("students");
-    
-    const adminEmail = "shiyamaladevijegan@gmail.com";
-    const plainPassword = "sham123";
-    
-    console.log(`🔍 Looking for admin user: ${adminEmail}`);
-    
-    // Find the admin user
-    const user = await usersCollection.findOne({ email: adminEmail });
-    
-    if (!user) {
-      console.log("❌ Admin user not found. Creating new admin user...");
-      
-      // Hash the password
-      const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
-      
-      // Create new admin user
-      const newAdmin = {
-        name: "Muthulakshmi",
-        email: adminEmail,
-        password: hashedPassword,
-        role: "admin",
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      
-      const result = await usersCollection.insertOne(newAdmin);
-      console.log("✅ New admin user created with ID:", result.insertedId);
-      
-    } else {
-      console.log("✅ Admin user found:", {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        isPasswordHashed: user.password ? user.password.startsWith('$2b$') : false
-      });
-      
-      // Check if password is already hashed
-      if (user.password && user.password.startsWith('$2b$')) {
-        console.log("✅ Password is already hashed");
-        return;
-      }
-      
-      // Hash the plain text password
-      console.log("🔐 Hashing plain text password...");
-      const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
-      
-      // Update the user with hashed password
-      await usersCollection.updateOne(
-        { _id: user._id },
-        { 
-          $set: { 
-            password: hashedPassword,
-            updatedAt: new Date(),
-            passwordMigrated: true
-          } 
-        }
-      );
-      
-      console.log("✅ Admin password hashed and updated successfully");
+
+    const existingUser = await usersCollection.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      throw new Error(`A user with ${normalizedEmail} already exists`);
     }
+
+    const hashedPassword = await bcrypt.hash(plainPassword, 12);
+    const result = await usersCollection.insertOne({
+      name: name.trim(),
+      email: normalizedEmail,
+      password: hashedPassword,
+      role: "admin",
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+
+    console.log("✅ New admin user created with ID:", result.insertedId);
     
   } catch (error) {
     console.error("❌ Error:", error);
@@ -85,13 +50,13 @@ async function hashAdminPassword() {
 }
 
 // Run the script
-console.log("🚀 Starting admin password hash...");
-hashAdminPassword()
+console.log("🚀 Creating admin user...");
+createAdmin()
   .then(() => {
-    console.log("✅ Admin password hash completed");
+    console.log("✅ Admin creation completed");
     process.exit(0);
   })
   .catch((error) => {
-    console.error("❌ Admin password hash failed:", error);
+    console.error("❌ Admin creation failed:", error);
     process.exit(1);
   }); 

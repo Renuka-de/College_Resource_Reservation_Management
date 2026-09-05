@@ -56,7 +56,27 @@ if (!process.env.MONGO_URI) {
     process.exit(1);
 }
 
-const client = new MongoClient(process.env.MONGO_URI);
+function getMongoUri(value) {
+  const trimmedValue = value.trim();
+
+  // Keep percent-encoded usernames/passwords intact, for example `%40` for `@`.
+  if (trimmedValue.startsWith("mongodb://") || trimmedValue.startsWith("mongodb+srv://")) {
+    return trimmedValue;
+  }
+
+  try {
+    const decodedValue = decodeURIComponent(trimmedValue);
+    if (decodedValue.startsWith("mongodb://") || decodedValue.startsWith("mongodb+srv://")) {
+      return decodedValue;
+    }
+  } catch (error) {
+    throw new Error("MONGO_URI is not a valid MongoDB connection string");
+  }
+
+  throw new Error("MONGO_URI must start with mongodb:// or mongodb+srv://");
+}
+
+const client = new MongoClient(getMongoUri(process.env.MONGO_URI));
 
 async function run() {
     try {
