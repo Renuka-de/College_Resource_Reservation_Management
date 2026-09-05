@@ -2,13 +2,6 @@
 
 A full-stack web application to manage the reservation of shared resources in academic institutions, built using the MERN stack. This system ensures fair usage, prevents scheduling conflicts, and supports role-based access for secure and efficient resource handling. It is scalable for future enhancements like mobile apps and AI-based suggestions.
 
-## Team Members
-
-- **Renuka Devi A C**
-- **Shiyamala Devi**
-- **Sindhulakshmi E**
-- **Kirupa V**
-
 ## Features
 
 - **User Authentication**  
@@ -111,7 +104,7 @@ node server.js
 3. **Frontend Setup**
 
 ```
-cd frontend
+cd frontend/my-react-app
 npm install
 npm start
 ```
@@ -121,19 +114,50 @@ npm start
 * Make sure MongoDB is running.
 * Configure the MongoDB URI and email credentials in `.env`.
 
+For MongoDB Atlas, use a URI with only one query marker:
+
+```env
+MONGO_URI=mongodb+srv://USERNAME:PASSWORD@crms.gjxg4sv.mongodb.net/CRMS?retryWrites=true&w=majority
+```
+
+Encode special characters only in the username or password. Do not encode the entire URI.
+
+## Current Deployment
+
+This student project is currently deployed using free-tier services:
+
+- **Frontend**: [Vercel](https://college-resource-reservation-manage.vercel.app)
+- **Backend API**: [Render](https://college-resource-reservation-management.onrender.com)
+- **Database**: MongoDB Atlas free tier
+
+The backend health check is available at [`/health`](https://college-resource-reservation-management.onrender.com/health) and should return:
+
+```json
+{"status":"ok"}
+```
+
+The deployed frontend uses the backend URL through the `REACT_APP_API_URL` environment variable. The backend uses `FRONTEND_URL` for CORS.
+
 ## Deployment with Render
 
-The repository includes a `render.yaml` blueprint for deploying the backend API and React frontend as separate Render services.
+The repository includes a `render.yaml` blueprint for deploying the backend API and React frontend as separate Render services. This setup is intended for a non-production student demonstration.
 
 1. Push the repository to GitHub and create a Render Blueprint from the repository.
 2. Create a MongoDB Atlas database and copy its connection string into the backend service's `MONGO_URI` variable.
 3. Set a long random value for `JWT_SECRET`.
 4. Set `MAIL` to the Gmail address used for notifications and `PASS` to a Gmail app password.
 5. After the first deploy, copy the frontend service URL into the backend `FRONTEND_URL` variable.
-6. Copy the backend service URL into the frontend `REACT_APP_API_URL` variable, for example `https://crms-api.onrender.com`.
-7. Redeploy both services, then check `https://<backend-service>.onrender.com/health` for `{ "status": "ok" }`.
+6. Copy the backend service URL into the frontend `REACT_APP_API_URL` variable, for example `https://college-resource-reservation-management.onrender.com`.
+7. Redeploy both services, then check `/health` for `{ "status": "ok" }`.
 
 Do not commit `.env` files or real credentials. The frontend variable must contain only the backend origin, without a trailing `/api`.
+
+### Free-Tier Limitations
+
+- Render may suspend the backend after inactivity, so the first request can be slow.
+- Render's local filesystem is temporary; uploaded files should not be treated as permanent storage.
+- Scheduled email reminders may not run reliably while the free backend is suspended.
+- MongoDB Atlas free tier has limited storage and connection capacity.
 
 ## Screenshots
 
