@@ -29,6 +29,9 @@ A full-stack web application to manage the reservation of shared resources in ac
 - **Reservation Cancellation**  
   Users can cancel reservations securely using a unique reservation ID. Identity verification prevents unauthorized cancellations.
 
+- **Timetable PDF Upload & Bulk Booking**  
+  Users can upload timetable PDFs and the system now parses the document structure to extract batch, semester, W.E.F date, classroom, advisor, and hall details. These bookings are then created automatically for the correct date range based on odd/even semester rules.
+
 - **My Reservations**  
   Users can view all of their current, upcoming, and past bookings with full details like resource name, date, time, and purpose. Easy option to cancel upcoming reservations.
 
@@ -72,12 +75,18 @@ A full-stack web application to manage the reservation of shared resources in ac
 - Users cancel reservations using the reservation ID.
 - Verifies user identity to protect against unauthorized cancellations.
 
-### 6. My Reservations Module
+### 6. Timetable PDF Parsing Module
+- Accepts timetable PDF uploads and classifies them as timetable documents.
+- Extracts semester, batch, W.E.F date, classroom, advisor, and hall information from the document header.
+- Generates booking slots automatically for the appropriate academic window.
+- Creates reservations under the authenticated uploader’s name.
+
+### 7. My Reservations Module
 - Displays user-specific reservations.
 - Shows resource name, date, time, and purpose.
 - Allows easy cancellation of upcoming bookings.
 
-### 7. Email Notification Module
+### 8. Email Notification Module
 - Automatically sends reminder emails at 9:00 AM the day before each reservation.
 - Sends confirmation emails for every booking or cancellation.
 
@@ -94,8 +103,10 @@ cd College_Resource_Reservation_Management
 ```
 cd backend
 npm install
-npm start
+node server.js
 ```
+
+> The backend now includes timetable PDF parsing utilities for bulk booking workflows.
 
 3. **Frontend Setup**
 
@@ -109,6 +120,20 @@ npm start
 
 * Make sure MongoDB is running.
 * Configure the MongoDB URI and email credentials in `.env`.
+
+## Deployment with Render
+
+The repository includes a `render.yaml` blueprint for deploying the backend API and React frontend as separate Render services.
+
+1. Push the repository to GitHub and create a Render Blueprint from the repository.
+2. Create a MongoDB Atlas database and copy its connection string into the backend service's `MONGO_URI` variable.
+3. Set a long random value for `JWT_SECRET`.
+4. Set `MAIL` to the Gmail address used for notifications and `PASS` to a Gmail app password.
+5. After the first deploy, copy the frontend service URL into the backend `FRONTEND_URL` variable.
+6. Copy the backend service URL into the frontend `REACT_APP_API_URL` variable, for example `https://crms-api.onrender.com`.
+7. Redeploy both services, then check `https://<backend-service>.onrender.com/health` for `{ "status": "ok" }`.
+
+Do not commit `.env` files or real credentials. The frontend variable must contain only the backend origin, without a trailing `/api`.
 
 ## Screenshots
 

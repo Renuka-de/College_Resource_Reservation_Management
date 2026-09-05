@@ -22,12 +22,18 @@ const globalLimiter = rateLimit({
 app.use(globalLimiter);
 
 // CORS configuration
+const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:3000";
+
 app.use(cors({ 
-  origin: "http://localhost:3000",
+  origin: allowedOrigin,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 
 // Security headers
 app.use((req, res, next) => {

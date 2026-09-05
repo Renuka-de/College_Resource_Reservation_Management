@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: crms-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: MAIL
+        sync: false
+      - key: PASS
+        sync: false
+
+  - type: web
+    name: crms-frontend
+    runtime: static
+    rootDir: frontend/my-react-app
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    envVars:
+      - key: REACT_APP_API_URL
+        sync: false
